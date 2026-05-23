@@ -1,0 +1,13 @@
+Neural networks are machine learning models inspired by the human brain.
+
+Neurons are processing units that receive inputs and produce outputs.
+
+Weights determine how important an input is.
+
+Activation functions help networks learn nonlinear patterns.
+
+Forward propagation moves information from input to output layers.
+
+Backpropagation updates weights using prediction errors.
+
+Gradient descent helps minimize loss.
