@@ -1,54 +1,48 @@
-class MockLLM:
+from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv
 
-    def invoke(self, prompt):
+load_dotenv()
 
-        class Response:
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash",
+    temperature=0.3
+)
+def generate_questions(state):
 
-            def __init__(self, content):
-                self.content = content
+    print("\n=== QUESTION GENERATION NODE ===")
 
-        prompt = prompt.lower()
+    checkpoint = state["current_checkpoint"]
+    context = state["retrieved_context"]
 
-        # -------------------------
-        # QUESTION GENERATION
-        # -------------------------
+    prompt = f"""
+    You are a tutor.
 
-        if "generate 3 conceptual questions" in prompt:
+    Topic:
+    {checkpoint['title']}
 
-            return Response(
-                """
-                Why are activation functions important?
-                How do weights affect predictions?
-                Why do neural networks need neurons?
-                """
-            )
+    Objectives:
+    {checkpoint['objectives']}
 
-        # -------------------------
-        # FEYNMAN TEACHING
-        # -------------------------
+    Study Material:
+    {context}
 
-        elif "explain these concepts very simply" in prompt:
+    Generate 3 short conceptual questions.
+    """
 
-            return Response(
-                """
-                Think of a neural network like a team of workers.
+    response = llm.invoke(prompt)
 
-                Neurons are workers that process information.
+    questions = response.content.strip().split("\n")
 
-                Weights decide which information is more important.
+    cleaned_questions = [
+        q.replace("-", "").strip()
+        for q in questions if q.strip()
+    ]
 
-                Activation functions help workers decide
-                whether information should move forward.
-                """
-            )
+    state["generated_questions"] = cleaned_questions
 
-        # -------------------------
-        # DEFAULT
-        # -------------------------
+    print("\nGenerated Questions:")
 
-        return Response(
-            "Default mock response"
-        )
+    for q in cleaned_questions:
+        print(f"- {q}")
 
-
-llm = MockLLM()
+    return state

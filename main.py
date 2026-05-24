@@ -1,40 +1,62 @@
 from app.graph.workflow import graph
+from app.rag.initialize import build_rag_pipeline
 
-from app.services.checkpoints import CHECKPOINTS
 
+if __name__ == "__main__":
 
-initial_state = {
+    print("\n=== INITIALIZING RAG ===")
 
+    vectorstore = build_rag_pipeline(
+        "data/notes/neural_networks.txt"
+    )
+
+    initial_state = {
     "topic": "Neural Networks",
 
-    "checkpoints": CHECKPOINTS,
+    "checkpoints": [
+        {
+            "id": "cp1",
+            "title": "Neural Network Basics",
+            "objectives": [
+                "Understand neurons",
+                "Understand weights",
+                "Understand activation functions"
+            ],
+            "threshold": 0.7
+        },
+        {
+            "id": "cp2",
+            "title": "Forward Propagation",
+            "objectives": [
+                "Understand input flow",
+                "Understand weighted sums",
+                "Understand prediction generation"
+            ],
+            "threshold": 0.7
+        },
+        {
+            "id": "cp3",
+            "title": "Backpropagation",
+            "objectives": [
+                "Understand loss calculation",
+                "Understand gradient descent",
+                "Understand weight updates"
+            ],
+            "threshold": 0.7
+        }
+    ],
 
     "current_checkpoint_index": 0,
-
-    "current_checkpoint": {},
-
     "score": 0.0,
-
-    "completed": False,
-
-    "session_complete": False,
-
-    "messages": [],
-
     "completed_checkpoints": [],
-    "generated_questions": [],
-
-    "learner_answers": [],
-
-    "weak_areas": [],
-
-    "feynman_explanation": "",
-    "retry_count": 0
+    "messages": [],
+    "retry_count": 0,
+    "vectorstore": vectorstore
 }
 
+    print("\n=== STARTING SESSION ===\n")
 
-result = graph.invoke(initial_state)
+    result = graph.invoke(initial_state)
 
-print("\n=== FINAL STATE ===\n")
-
-print(result)
+    print("\n=== FINAL RESULT ===\n")
+    print(result)

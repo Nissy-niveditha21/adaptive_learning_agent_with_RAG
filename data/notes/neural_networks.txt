@@ -1,0 +1,11 @@
+Neural Networks Overview
+
+A neuron receives inputs, multiplies them with weights, and passes them through an activation function.
+
+Weights control influence strength of inputs.
+
+Activation functions introduce non-linearity.
+
+Forward propagation computes outputs layer by layer.
+
+Backpropagation updates weights using gradients from loss.

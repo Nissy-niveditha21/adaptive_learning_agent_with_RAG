@@ -2,6 +2,7 @@ from langgraph.graph import StateGraph, END
 
 from app.models.state import LearningState
 
+from app.nodes.retriever_node import retrieve_context
 from app.nodes.start_node import start_learning
 from app.nodes.checkpoint_node import checkpoint_node
 from app.nodes.question_node import generate_questions
@@ -13,6 +14,7 @@ from app.nodes.router import evaluate_score
 from app.nodes.session_router import continue_or_end
 from app.nodes.feynman_node import feynman_teaching
 from app.nodes.retry_router import retry_or_end
+
 workflow = StateGraph(LearningState)
 
 # -------------------------
@@ -59,7 +61,7 @@ workflow.set_entry_point("start")
 
 workflow.add_edge("start", "checkpoint")
 
-workflow.add_edge("checkpoint", "question_node")
+#workflow.add_edge("checkpoint", "question_node")
 
 workflow.add_edge("question_node", "assessment_node")
 
@@ -105,7 +107,17 @@ workflow.add_conditional_edges(
 
 workflow.add_edge("fail_node", "feynman_node")
 
+workflow.add_node("retriever_node", retrieve_context)
 
+workflow.add_edge(
+    "checkpoint",
+    "retriever_node"
+)
+
+workflow.add_edge(
+    "retriever_node",
+    "question_node"
+)
 # -------------------------
 # COMPILE
 # -------------------------

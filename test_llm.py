@@ -5,3 +5,5 @@ response = llm.invoke(
 )
 
 print(response.content)
+"""Activation functions help neurons decide outputs.
+Weights determine prediction importance."""

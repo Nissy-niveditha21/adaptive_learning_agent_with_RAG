@@ -6,37 +6,44 @@ def generate_questions(state):
     print("\n=== QUESTION GENERATION NODE ===")
 
     checkpoint = state["current_checkpoint"]
-
-    title = checkpoint["title"]
-
-    objectives = checkpoint["objectives"]
+    context = state["retrieved_context"]
 
     prompt = f"""
-    Generate 3 conceptual questions.
+    You are a tutor.
 
     Topic:
-    {title}
+    {checkpoint['title']}
 
     Objectives:
-    {objectives}
+    {checkpoint['objectives']}
 
-    Focus on:
-    - reasoning
-    - conceptual understanding
-    - application
+    Study Material:
+    {context}
 
-    Return only questions.
+    Generate 3 short conceptual questions.
     """
 
-    response = llm.invoke(prompt)
+    try:
 
-    questions = response.content.strip().split("\n")
+        response = llm.invoke(prompt)
 
-    cleaned_questions = [
-        q.strip("- ").strip()
-        for q in questions
-        if q.strip()
-    ]
+        questions = response.content.strip().split("\n")
+
+        cleaned_questions = [
+            q.replace("-", "").strip()
+            for q in questions if q.strip()
+        ]
+
+    except Exception as e:
+
+        print("\nLLM FAILED — USING FALLBACK QUESTIONS")
+        print(e)
+
+        cleaned_questions = [
+            "What is a neuron?",
+            "Why are weights important?",
+            "Why do activation functions matter?"
+        ]
 
     state["generated_questions"] = cleaned_questions
 

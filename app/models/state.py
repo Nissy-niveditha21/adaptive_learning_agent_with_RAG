@@ -29,3 +29,4 @@ class LearningState(TypedDict):
 
     completed_checkpoints: List[str]
     retry_count: int
+    retrieved_context: str
