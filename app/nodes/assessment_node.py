@@ -21,7 +21,10 @@ def assess_answers(state):
         answer = input("Your Answer: ")
 
         learner_answers.append(answer)
+        bad_answers = ["no", "idk", "i dont know"]
 
+        if answer.lower() in bad_answers:
+            similarity = 0
         reference = REFERENCE_ANSWERS.get(q, "")
 
         score = semantic_score(

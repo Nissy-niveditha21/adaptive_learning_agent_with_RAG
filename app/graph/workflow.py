@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-
+from langchain_community.document_loaders import PyPDFLoader
 from app.models.state import LearningState
 
 from app.nodes.retriever_node import retrieve_context

@@ -30,9 +30,10 @@ def generate_questions(state):
         questions = response.content.strip().split("\n")
 
         cleaned_questions = [
-            q.replace("-", "").strip()
-            for q in questions if q.strip()
-        ]
+        q.replace("-", "").strip()
+        for q in questions
+        if q.strip() and "Here are" not in q
+]
 
     except Exception as e:
 
