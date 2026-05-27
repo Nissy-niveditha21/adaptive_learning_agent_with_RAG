@@ -14,11 +14,13 @@ def assess_answers(state):
 
     weak_areas = []
 
-    for q in questions:
+    learner_answers = state.get("learner_answers", [])
+
+    for index, q in enumerate(questions):
 
         print(f"\nQuestion: {q}")
 
-        answer = input("Your Answer: ")
+        answer = learner_answers[index] if index < len(learner_answers) else ""
 
         learner_answers.append(answer)
         bad_answers = ["no", "idk", "i dont know"]

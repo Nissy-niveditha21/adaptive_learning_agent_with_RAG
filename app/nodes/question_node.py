@@ -1,4 +1,4 @@
-from app.services.llm import llm
+from app.services.llm import invoke_llm
 
 
 def generate_questions(state):
@@ -28,9 +28,21 @@ def generate_questions(state):
     Return only questions.
     """
 
-    response = llm.invoke(prompt)
-
-    questions = response.content.strip().split("\n")
+    try:
+        response = invoke_llm(prompt, timeout=12)
+        content = response.content
+        if isinstance(content, list):
+            content = "\n".join(str(item) for item in content)
+        else:
+            content = str(content)
+        questions = content.strip().split("\n")
+    except Exception as exc:
+        print("LLM invoke failed or timed out, using fallback questions:\n", exc)
+        questions = [
+            "What is the role of weights in a neural network?",
+            "How does an activation function affect neuron output?",
+            "Why is forward propagation important in training?"
+        ]
 
     cleaned_questions = [
         q.strip("- ").strip()

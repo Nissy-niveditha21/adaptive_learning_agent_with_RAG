@@ -1,4 +1,4 @@
-from app.services.llm import llm
+from app.services.llm import invoke_llm
 
 
 def feynman_teaching(state):
@@ -22,9 +22,12 @@ Rules:
 - short explanations
 """
 
-    response = llm.invoke(prompt)
-
-    explanation = response.content
+    try:
+        response = invoke_llm(prompt, timeout=12)
+        explanation = response.content
+    except Exception as exc:
+        print("Feynman LLM invoke failed or timed out, using fallback explanation:\n", exc)
+        explanation = "The AI tutor is currently unavailable for a full explanation, but here are the key ideas: neurons pass signals, weights control influence, and activation functions decide whether a signal should continue."
 
     state["feynman_explanation"] = explanation
 
